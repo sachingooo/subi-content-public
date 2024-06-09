@@ -11,9 +11,42 @@
 	}
 }
 
+.article-inner-content {
+	font-size: 1.45em;
+	padding: 30px;
+	text-align: justify;
+
+	& .caption {
+		font-size: 0.6em;
+		font-style: italic;
+		margin-bottom: 30px;
+	}
+
+	h1 {
+		margin-top: 40px;
+		margin-bottom: 20px;
+		font-size: 1.75em;
+		text-align: left;
+		font-weight: bold;
+	}
+
+	h2 {
+		margin-top: 40px;
+		font-size: 1.65em;
+		text-align: left;
+	}
+
+	h3 {
+		margin-top: 40px;
+		font-size: 1.57em;
+		text-align: left;
+	}
+}
+
 .closeButton {
 	position: absolute;
 	top: 10px;
 	right: 10px;
 	z-index: 100;
+	font-size: 4em;
 }
