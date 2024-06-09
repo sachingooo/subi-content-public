@@ -1,8 +1,7 @@
-.container {
-	padding: 10px 20px;
-	background-color: lightgrey;
+.container-wrapper {
+	padding: 0px 20px;
+	background-color: #f5f5f5;
 	overflow-y: auto;
 	overflow-x: hidden;
-	width: 100vh;
 	height: 100vh;
 }

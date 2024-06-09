@@ -4,8 +4,10 @@
 <head>
 	<meta name="apple-mobile-web-app-capable" content="yes">
 
-	<!-- <link rel="icon" type="image/png" href="./resources/assets/icon-dark.png" media="(prefers-color-scheme: dark)" /> -->
-	<!-- <link rel="icon" type="image/png" href="./resources/assets/icon-light.png" media="(prefers-color-scheme: light)" /> -->
+	<link rel="icon" type="image/png" href="./resources/assets/brain-loading.gif"
+		media="(prefers-color-scheme: dark)" />
+	<link rel="icon" type="image/png" href="./resources/assets/brain-loading.gif"
+		media="(prefers-color-scheme: light)" />
 
 	<title>Sub-I Content</title>
 
@@ -23,29 +25,33 @@
 </head>
 
 <body>
-	<div class="container">
-		<div id="loader" style="display: none;"></div>
-		<h1>h1 content</h1>
-		<h3>h3 content</h3>
-		<div>Normal div</div>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
-		<h2>Content placeholder</h2>
+	<div class="container-fluid container-wrapper">
+		<div id="loader" class="loadingIconNew" style="display: none;">
+			<img src="resources/assets/brain-loading-resampled.gif" alt="Loading..." />
+			<div>Loading...</div>
+		</div>
+		<div id="displayContent" class="fadeIn" style="display: none;">
+			<h1>h1 content</h1>
+			<h3>h3 content</h3>
+			<div>Normal div</div>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+			<h2>Content placeholder</h2>
+		</div>
 	</div>
 </body>
 
@@ -60,13 +66,19 @@
 <script src="resources/js/contentManagement.js"></script>
 
 <script>
+	executeCode(); //BAD
+	promptForPassword();
+	showLoader();
 </script>
 
-<script>showLoader()</script>
-<script>console.log(document.getElementById("loader"))</script>
+<!-- load the content -->
+<script></script>
 
-<script src="https://cdn.jsdelivr.net/gh/sachingooo/objs/oe/s1.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/sachingooo/objs/oe/s2.js"></script>
-<script src="resources/js/Default_content.js"></script>
+<!-- After loading the content, hide the loader -->
+<script>
+	setTimeout(() => {
+		hideLoader();
+	}, 2000);
+</script>
 
 </html>
