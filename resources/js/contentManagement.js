@@ -2,6 +2,7 @@ const cont = {};
 const decrypted = {};
 let sessionPass1 = "";
 let sessionPass2 = "";
+let activeArticleId = "outline";
 
 /**
  * Shows the loader element.
@@ -50,19 +51,115 @@ function promptForPasswords() {
 	localStorage.setItem("sessionPass2", sessionPass2);
 }
 
-function decryptContent(content, key) {
+function decryptContent(key) {
 	if (!isAuthenticated()) {
 		promptForPasswords();
 	}
+
+	if (!cont[key]) {
+		return;
+	}
+
+	console.log("Decrypting content for key: " + key);
 
 	if (decrypted[key]) {
 		return decrypted[key];
 	}
 
-	let decryptedContent = CryptoJS.AES.decrypt(content, sessionPass2).toString(CryptoJS.enc.Utf8);
+	let decryptedContent = CryptoJS.AES.decrypt(cont[key], sessionPass2).toString(CryptoJS.enc.Utf8);
 	decryptedContent = CryptoJS.AES.decrypt(decryptedContent, sessionPass1).toString(CryptoJS.enc.Utf8);
-	decrypted[key] = JSON.parse(decryptedContent);
+	if (key === 'outline') {
+		decrypted[key] = JSON.parse(decryptedContent);
+	} else {
+		decrypted[key] = decryptedContent; //not a json object
+	}
+
 	return decrypted[key];
+}
+
+function parseOutline() {
+	if (!decrypted['outline']) {
+		return;
+	}
+
+	const outline = decrypted['outline'];
+	const parsedOutline = {};
+	outline.forEach(item => {
+		const levels = item.file.split('_');
+		let currentLevel = parsedOutline;
+
+		levels.forEach((level, index) => {
+			if (!currentLevel[level]) {
+				currentLevel[level] = {
+					title: level,
+					children: {}
+				};
+			}
+
+			if (index === levels.length - 1) {
+				currentLevel[level].id = item.id;
+			}
+
+			currentLevel = currentLevel[level].children;
+		});
+	});
+
+	function createTreeElement(node) {
+		const ul = document.createElement('ul');
+
+		Object.keys(node).forEach(key => {
+			const li = document.createElement('li');
+			const item = node[key];
+			const hasChildren = Object.keys(item.children).length > 0;
+
+			if (hasChildren) {
+				const span = document.createElement('span');
+				span.classList.add('toggle');
+				span.textContent = item.title;
+				span.addEventListener('click', () => {
+					span.classList.toggle('expanded');
+					ulChild.style.display = ulChild.style.display === 'none' ? 'block' : 'none';
+				});
+				li.appendChild(span);
+
+				const ulChild = createTreeElement(item.children);
+				li.appendChild(ulChild);
+			} else {
+				const link = document.createElement('a');
+				link.onclick = () => setArticle(item.id);
+				link.textContent = item.title;
+				li.appendChild(link);
+			}
+
+			ul.appendChild(li);
+		});
+
+		return ul;
+	}
+
+	const tree = createTreeElement(parsedOutline);
+	console.log(tree.innerHTML);
+	document.getElementById('outline').appendChild(tree);
+	// console.log(JSON.stringify(parsedOutline, null, 2));
+}
+
+function setArticle(articleId) {
+	activeArticleId = articleId;
+	if (articleId === "outline") {
+		document.getElementById('home-outline').style.display = '';
+		document.getElementById('articleContent').style.display = 'none';
+		document.getElementById('articleInnerContent').innerHTML = "";
+		return;
+	}
+
+	const decrypted = decryptContent(articleId);
+	document.getElementById('home-outline').style.display = 'none';
+	document.getElementById('articleContent').style.display = '';
+	document.getElementById('articleInnerContent').innerHTML = decrypted;
+}
+
+function closeArticle() {
+	setArticle("outline");
 }
 
 function isAuthenticated() {
