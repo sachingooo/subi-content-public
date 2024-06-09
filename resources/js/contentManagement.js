@@ -2,7 +2,6 @@ const cont = {};
 const decrypted = {};
 let sessionPass1 = "";
 let sessionPass2 = "";
-let isAuthenticated = false;
 
 /**
  * Shows the loader element.
@@ -49,6 +48,21 @@ function promptForPasswords() {
 
 	localStorage.setItem("sessionPass1", sessionPass1);
 	localStorage.setItem("sessionPass2", sessionPass2);
+}
+
+function decryptContent(content, key) {
+	if (!isAuthenticated()) {
+		promptForPasswords();
+	}
+
+	if (decrypted[key]) {
+		return decrypted[key];
+	}
+
+	let decryptedContent = CryptoJS.AES.decrypt(content, sessionPass2).toString(CryptoJS.enc.Utf8);
+	decryptedContent = CryptoJS.AES.decrypt(decrypted, sessionPass1).toString(CryptoJS.enc.Utf8);
+	decrypted[key] = JSON.parse(decryptedContent);
+	return decrypted[key];
 }
 
 function isAuthenticated() {

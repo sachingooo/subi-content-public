@@ -1,2 +1,3 @@
 resources/js/setup.js
 scrape/
+_secrets.json

@@ -31,6 +31,7 @@
 			<div>Loading...</div>
 		</div>
 		<div id="displayContent" class="fadeIn" style="display: none;">
+			<div id="outline"></div>
 			<h1>h1 content</h1>
 			<h3>h3 content</h3>
 			<div>Normal div</div>
@@ -54,36 +55,32 @@
 	</div>
 </body>
 
-<script>
-</script>
+<!-- custom scripts -->
+<script src="resources/js/contentManagement.js"></script>
 
 <!-- external libraries -->
 <script src="https://unpkg.com/virtual-scroller@1.x/bundle/virtual-scroller-dom.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 
-<!-- custom scripts -->
-<script src="resources/js/contentManagement.js"></script>
-
 <script>
-	try {
-		promptForPasswords();
-		showLoader();
-		if (isAuthenticated()) {
-			setTimeout(() => {
-				hideLoader();
-			}, 2000);
-		}
-	} catch (error) {
-		window.alert(error);
-	}
+	promptForPasswords();
+	showLoader();
 </script>
 
 <!-- load the content -->
-<script></script>
+<script src="https://cdn.jsdelivr.net/gh/sachingooo/objs/subi/supp/outline.js"></script>
+
+<script>
+	document.getElementById('outline').innerHTML = decryptContent(cont['outline'], 'outline');
+</script>
 
 <!-- After loading the content, hide the loader -->
 <script>
-
+	if (isAuthenticated()) {
+		setTimeout(() => {
+			hideLoader();
+		}, 2000);
+	}
 </script>
 
 </html>
