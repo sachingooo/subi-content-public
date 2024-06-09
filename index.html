@@ -65,8 +65,17 @@
 <script src="resources/js/contentManagement.js"></script>
 
 <script>
-	promptForPasswords();
-	showLoader();
+	try {
+		promptForPasswords();
+		showLoader();
+		if (isAuthenticated()) {
+			setTimeout(() => {
+				hideLoader();
+			}, 2000);
+		}
+	} catch (error) {
+		window.alert(error);
+	}
 </script>
 
 <!-- load the content -->
@@ -74,11 +83,7 @@
 
 <!-- After loading the content, hide the loader -->
 <script>
-	if (isAuthenticated()) {
-		setTimeout(() => {
-			hideLoader();
-		}, 2000);
-	}
+
 </script>
 
 </html>
