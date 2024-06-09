@@ -60,7 +60,7 @@ function decryptContent(content, key) {
 	}
 
 	let decryptedContent = CryptoJS.AES.decrypt(content, sessionPass2).toString(CryptoJS.enc.Utf8);
-	decryptedContent = CryptoJS.AES.decrypt(decrypted, sessionPass1).toString(CryptoJS.enc.Utf8);
+	decryptedContent = CryptoJS.AES.decrypt(decryptedContent, sessionPass1).toString(CryptoJS.enc.Utf8);
 	decrypted[key] = JSON.parse(decryptedContent);
 	return decrypted[key];
 }
