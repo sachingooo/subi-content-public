@@ -1,7 +1,7 @@
 const cont = {};
 const decrypted = {};
-let sessionPass = "";
-let localPass = "";
+let sessionPass1 = "";
+let sessionPass2 = "";
 let isAuthenticated = false;
 
 /**
@@ -20,16 +20,19 @@ function hideLoader() {
 	document.getElementById('displayContent').style.display = '';
 }
 
-function promptForPassword() {
-	localPass = localStorage.getItem("localpass");
-	if (!localPass) {
-		throw new Error("Local password not set.");
-	}
-	sessionPass = prompt("Please enter the password to view this content", "");
-	if (!sessionPass) {
+function promptForPasswords() {
+
+	sessionPass1 = prompt("Password 1", "");
+	if (!sessionPass1) {
 		alert("You must enter a password to view this content.");
-		promptForPassword();
+		promptForPasswords();
 	}
 
-	isAuthenticated = (localPass && sessionPass);
+	sessionPass2 = prompt("Password 2", "");
+	if (!sessionPass2) {
+		alert("You must enter a password to view this content.");
+		promptForPasswords();
+	}
+
+	isAuthenticated = (sessionPass1 && sessionPass2);
 }
