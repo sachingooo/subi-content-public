@@ -19,6 +19,7 @@
 	<link rel="stylesheet" href="resources/styles/loader.css">
 	<link rel="stylesheet" href="resources/styles/layout.css">
 	<link rel="stylesheet" href="resources/styles/article.css">
+	<link rel="stylesheet" href="resources/styles/search.css">
 
 	<!-- icons and fonts -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -27,10 +28,14 @@
 
 <body>
 	<div id="home-outline" class="container-fluid container-wrapper" style="display: '';">
+		<h1><strong>Neurosurgery</strong></h1>
 		<div id="loader" class="loadingIconNew" style="display: none;">
 			<img src="resources/assets/brain-loading-resampled.gif" alt="Loading..." />
-			<div>Loading...</div>
+			<div id="loaderMessage"></div>
 		</div>
+		<input id="searchBar" class="search-bar" placeholder="Search for content..." aria-label="Search"
+			oninput="performSearch()">
+		<div id="searchResults" class="search-results"></div>
 		<h1>Content Outline</h1>
 		<div id="displayContent" class="fadeIn" style="display: none;">
 			<div id="outline" class="content-outline"></div>
@@ -52,10 +57,11 @@
 <!-- external libraries -->
 <script src="https://unpkg.com/virtual-scroller@1.x/bundle/virtual-scroller-dom.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script>
 
 <script>
 	promptForPasswords();
-	showLoader();
+	showLoader("Loading content...");
 </script>
 
 <!-- load the content -->
@@ -482,8 +488,12 @@
 <!--#endregion -->
 
 <script>
+	showLoader("Decrypting content...");
 	decryptContent('outline');
 	parseOutline();
+	for (const articleId in cont) {
+		decryptContent(articleId);
+	}
 </script>
 
 <!-- After loading the content, hide the loader -->

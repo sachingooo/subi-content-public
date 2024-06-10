@@ -3,13 +3,19 @@ const decrypted = {};
 let sessionPass1 = "";
 let sessionPass2 = "";
 let activeArticleId = "outline";
+let currentSearch = "";
+const searchIndex = {};
 
 /**
  * Shows the loader element.
  */
-function showLoader() {
+function showLoader(message) {
+	if (!message) {
+		message = "Loading...";
+	}
 	document.getElementById('loader').style.display = '';
 	document.getElementById('displayContent').style.display = 'none';
+	document.getElementById('loaderMessage').textContent = message;
 }
 
 /**
@@ -60,8 +66,6 @@ function decryptContent(key) {
 		return;
 	}
 
-	console.log("Decrypting content for key: " + key);
-
 	if (decrypted[key]) {
 		return decrypted[key];
 	}
@@ -73,6 +77,10 @@ function decryptContent(key) {
 	} else {
 		decrypted[key] = decryptedContent; //not a json object
 	}
+
+	const fakeElement = document.createElement('div');
+	fakeElement.innerHTML = decrypted[key];
+	searchIndex[key] = fakeElement.textContent.toLowerCase();
 
 	return decrypted[key];
 }
@@ -138,9 +146,7 @@ function parseOutline() {
 	}
 
 	const tree = createTreeElement(parsedOutline);
-	console.log(tree.innerHTML);
 	document.getElementById('outline').appendChild(tree);
-	// console.log(JSON.stringify(parsedOutline, null, 2));
 }
 
 function setArticle(articleId) {
@@ -164,4 +170,69 @@ function closeArticle() {
 
 function isAuthenticated() {
 	return (sessionPass1 && sessionPass2);
+}
+
+function performSearch() {
+	const searchTerm = document.getElementById('searchBar').value.toLowerCase();
+	if (searchTerm === currentSearch) {
+		return;
+	}
+
+	if (!searchTerm) {
+		document.getElementById('searchResults').innerHTML = "";
+		return;
+	}
+
+	currentSearch = searchTerm;
+
+	resultPreviews = {};
+	const previewLength = 250;
+	Object.keys(searchIndex).forEach(key => {
+		if (key === 'outline') {
+			return;
+		}
+		if (searchIndex[key].includes(searchTerm)) {
+			const location = searchIndex[key].indexOf(searchTerm);
+			const fakeElement = document.createElement('div');
+			fakeElement.innerHTML = decryptContent(key);
+			const articleText = fakeElement.innerText;
+
+			let previewStart = Math.max(0, location - previewLength / 2);
+			let previewEnd = Math.min(articleText.length, location + previewLength / 2);
+
+			// Adjust previewStart to the nearest space character
+			while (previewStart > 0 && articleText[previewStart] !== ' ') {
+				previewStart--;
+			}
+
+			// Adjust previewEnd to the nearest space character
+			while (previewEnd < articleText.length && articleText[previewEnd] !== ' ') {
+				previewEnd++;
+			}
+
+			const preview = articleText.substring(previewStart, previewEnd);
+			resultPreviews[key] = preview.trim();
+		}
+	});
+
+	const searchResults = document.getElementById('searchResults');
+	searchResults.innerHTML = "";
+	const matchingKeys = Object.keys(resultPreviews);
+	const outline = decrypted['outline'];
+	matchingKeys.forEach(key => {
+		const preview = resultPreviews[key];
+		const previewEl = document.createElement('div');
+		previewEl.className = "search-result";
+		previewTitleEl = document.createElement('div');
+		const matchedFullTitlePieces = outline.find(item => item.id === key).file.split("_");
+		previewTitleEl.innerHTML = `<h3><strong>${matchedFullTitlePieces[matchedFullTitlePieces.length - 1]}</strong></h3>`;
+		previewEl.textContent = preview;
+		previewEl.prepend(previewTitleEl);
+		previewEl.onclick = () => setArticle(key);
+		searchResults.appendChild(previewEl);
+	});
+
+	const context = document.querySelectorAll(".search-result");
+	const instance = new Mark(context);
+	instance.mark(currentSearch);
 }
